@@ -1,21 +1,24 @@
 #!/usr/bin/perl
-
 use strict;
 use warnings;
 
+use lib 'F:\SICP\Implementation\mal\impls\LukaPerl';
+use reader;
+use printer;
+
 # READ
 sub READ {
-    return $_[0];
+    ReaderFunctionality::read_str($_[0]);
 }
 
 # EVAL
 sub EVAL {
-    return $_[0];
+    return @_;
 }
 
 # PRINT
 sub PRINT {
-    return $_[0];
+    return Printer::pr_str(@_);
 }
 
 # rep
@@ -27,5 +30,5 @@ sub rep {
 while(1) {
     print "user> ";
     my $input = <STDIN>;
-    print rep($input);
+    print rep($input) . "\n";
 }
