@@ -25,7 +25,7 @@ sub tokenize {
 sub read_form {
     my $reader = $_[0];
     my $firstToken = $reader->next();
-    switch(substr($firstToken, 0, 1)){
+    switch($firstToken){
         case "("        { return read_list($reader) }
         else            { return read_atom($firstToken) }
     }
@@ -38,6 +38,7 @@ sub read_list {
     until ($reader->peek() =~ /\Q)/) {
         push(@res, read_form($reader));
     }
+    $reader->next();
     return [@res];
 }
 

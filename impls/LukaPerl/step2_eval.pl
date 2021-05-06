@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use lib '/home/luka/PycharmProjects/mal/impls/LukaPerl';
+use lib 'F:\SICP\Implementation\mal\impls\LukaPerl';
 use reader;
 use printer;
 use Switch;
@@ -20,29 +20,34 @@ sub READ {
 
 # EVAL
 sub EVAL {
-    my $form = $_[0];
-    my %env = $_[1];
+    my $form = shift;
+    my %env = @_;
 
-    if (ref($form)) {
-        return eval_ast($form, %env);
+    if (ref($form) eq 'ARRAY') {
+        if (ref($form)) {
+            my @evaled = eval_ast($form, %env);
+            my $function = shift(@evaled);
+            return $env{$function}(@evaled);
+        } else {
+            return $form;
+        }
     } else {
-        my @evaled = eval_ast($form, %env);
-        my $function = shift(@evaled);
-        return $env{$function}(@evaled);
+        return eval_ast($form, %env);
     }
+
 }
 
 sub eval_ast {
-    my $form = $_[0];
-    my %env = $_[1];
-    if (ref($form)) {
-        my @res;
-        foreach my $i (@$form){
-            push(@res, eval_ast($i, %env));
-        }
-        return @res;
-    } else {
-        return $env{$form};
+    my $form = shift;
+    my %env = @_;
+    switch (ref($form)) {
+        case 'SCALAR' { return $env{$form} }
+        case 'ARRAY'  { my @res;
+                        foreach my $i (@$form) {
+                            push(@res, EVAL($i, %env))
+                        }
+                        return @res }
+        else          { return $form }
     }
 }
 
